@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SimpleCheckbox Example</title>
+    <style>
+        .simple-checkbox{
+            color: #ff1110;
+        }
+        .simple-checkbox-checked{
+            color: #0011aa;
+        }
+    </style>
+</head>
+<body>
+<div id="checkbox"></div>
+<script src="src/SimpleCheckbox.js"></script>
+<script>
+    var oCheckbox = new SimpleCheckbox({
+        target: document.getElementById('checkbox'),
+        tip: '我是文本',
+        checked: true
+    });
+</script>
+</body>
+</html>
