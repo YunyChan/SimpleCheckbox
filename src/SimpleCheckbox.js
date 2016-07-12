@@ -40,22 +40,31 @@
     function fGetDOM(oRoot, sQuery) {
         var sMatch = sQuery.match(/([\w\-]*)([\.#])([\w\-]*)/);
         var sTag = '';
-        var sAttribute = '';
-        var sClass = '';
+        var sAttributeValue = '';
+        var fIsMatch = null;
         if(sMatch.length > 1){
             sTag = sMatch[1];
-            sAttribute = sMatch[2] == '#' ? 'id' : 'class';
-            sClass = sMatch[3];
-            var oTargetClassRegExp = new RegExp(sClass);
+            fIsMatch = sMatch[2] == '#' ? _fIsMatchById : _fIsMatchByClass;
+            sAttributeValue = sMatch[3];
             var oDOMs = oRoot.getElementsByTagName(sTag);
             for(var cnt = 0, length = oDOMs.length; cnt < length; cnt ++){
                 var oDOM = oDOMs[cnt];
-                if(oTargetClassRegExp.test(oDOM.getAttribute(sAttribute))){
+                if(fIsMatch(oDOM, sAttributeValue)){
                     return oDOM;
                 }
             }
         }
         return null;
+
+        function _fIsMatchById(oDOM, sTargetId){
+            return oDOM.id == sTargetId;
+        }
+
+        function _fIsMatchByClass(oDOM, sTargetClass){
+            var oTargetClassRegExp = new RegExp(sTargetClass);
+            return oTargetClassRegExp.test(oDOM.className);
+        }
+
     }
 
     var SimpleCheckbox = fConstructor;
@@ -82,14 +91,23 @@
         this.name = oConf.name || '';
         this.tip = oConf.tip || '';
         this.isIE6 = /MSIE 6\.0/.test(window.navigator.userAgent);
+        this.isIE = /MSIE/.test(window.navigator.userAgent);
         this.init();
         return this;
     }
 
     function fInit(){
+        var that = this;
         this.render();
         this.initEvents();
-        this.setValue(this.checked);
+        
+        if(this.isIE){
+            setTimeout(function(){
+                that.setValue(that.checked);
+            }, 200)
+        }else{
+            this.setValue(this.checked);
+        }
     }
 
     function fInitEvents() {
