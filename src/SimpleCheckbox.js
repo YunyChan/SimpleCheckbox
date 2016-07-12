@@ -156,8 +156,13 @@
 
     function fRender() {
         this.renderDOM();
-        this.rawClass = this.target.className;
-        this.rootClass = (this.rawClass == ''? '' : ' ') + 'simple-checkbox';
+
+        if(this.bind){
+            this.rootClass = this.target.className;
+        }else{
+            this.rawClass = this.target.className;
+            this.rootClass = this.rawClass + (this.rawClass == ''? '' : ' ') + 'simple-checkbox';
+        }
     }
 
     function fRenderDOM() {

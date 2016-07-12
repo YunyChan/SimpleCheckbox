@@ -32,9 +32,10 @@
 下面是组件的配置参数说明：
 
 + `target` - __必须__, 需要插入组件的dom元素
-+ `name` - _可选[String]_, 复选框与之
-+ `checked` - _可选[Boolean]:false_, 默认是否选中
-+ `tip` - 可选[String]_, 复选框提示信息
++ `bind` - _可选[Boolean]:false_, 是否从已有DOM渲染组件
++ `name` - _可选[String]_, 复选框表单name值
++ `checked` - _可选[Boolean]:false_, 设置复选框在初始化时默认是否选中
++ `tip` - _可选[String]_, 复选框提示信息
 
 APIs
 
