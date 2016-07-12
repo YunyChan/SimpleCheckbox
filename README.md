@@ -32,13 +32,16 @@
 下面是组件的配置参数说明：
 
 + `target` - __必须__, 需要插入组件的dom元素
-+ `checked` - _default: false_, 默认是否选中
-+ `tip` - _default: ''_, 默认为空
++ `name` - _可选[String]_, 复选框与之
++ `checked` - _可选[Boolean]:false_, 默认是否选中
++ `tip` - 可选[String]_, 复选框提示信息
 
 APIs
 
 * `check()` - 选中
 * `uncheck()` - 取消选中
+* `getValue()` - 获取复选框选中状态
+* `setValue(Boolean)` - 设置复选框选中状态
 
 ## 作者 ##
 

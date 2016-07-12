@@ -6,7 +6,8 @@
     var Helper = {
         listenEvent: fListenEvent,
         stopPropagation: fStopPropagation,
-        preventDefault: fPreventDefault
+        preventDefault: fPreventDefault,
+        getDOM: fGetDOM
     };
 
     function fListenEvent(oDom, sEventName, fCallback, bUseCapture){
@@ -36,6 +37,26 @@
         }
     }
 
+    function fGetDOM(oRoot, sQuery) {
+        var sMatch = sQuery.match(/([\w\-]*)([\.#])([\w\-]*)/);
+        var sTag = '';
+        var sAttribute = '';
+        var sClass = '';
+        if(sMatch.length > 1){
+            sTag = sMatch[1];
+            sAttribute = sMatch[2] == '#' ? 'id' : 'class';
+            sClass = sMatch[3];
+            var oTargetClassRegExp = new RegExp(sClass);
+            var oDOMs = oRoot.getElementsByTagName(sTag);
+            for(var cnt = 0, length = oDOMs.length; cnt < length; cnt ++){
+                var oDOM = oDOMs[cnt];
+                if(oTargetClassRegExp.test(oDOM.getAttribute(sAttribute))){
+                    return oDOM;
+                }
+            }
+        }
+        return null;
+    }
 
     var SimpleCheckbox = fConstructor;
     // 静态变量
@@ -44,6 +65,9 @@
     SimpleCheckbox.prototype.init = fInit;
     SimpleCheckbox.prototype.initEvents = fInitEvents;
     SimpleCheckbox.prototype.render = fRender;
+    SimpleCheckbox.prototype.renderDOM = fRenderDOM;
+    SimpleCheckbox.prototype.getValue = fGetValue;
+    SimpleCheckbox.prototype.setValue = fSetValue;
     SimpleCheckbox.prototype.check = fCheck;
     SimpleCheckbox.prototype.uncheck = fUncheck;
     SimpleCheckbox.prototype.toggle = fToggle;
@@ -53,8 +77,10 @@
     function fConstructor(oConf){
         this.config =  oConf = oConf || {};
         this.target = oConf.target;
-        this.tip = oConf.tip || '';
+        this.bind = !!oConf.bind;
         this.checked = !!oConf.checked;
+        this.name = oConf.name || '';
+        this.tip = oConf.tip || '';
         this.isIE6 = /MSIE 6\.0/.test(window.navigator.userAgent);
         this.init();
         return this;
@@ -63,11 +89,7 @@
     function fInit(){
         this.render();
         this.initEvents();
-        if(this.checked){
-            this.check();
-        }else{
-            this.uncheck();
-        }
+        this.setValue(this.checked);
     }
 
     function fInitEvents() {
@@ -102,7 +124,7 @@
             if(/simple-checkbox-input/.test(sClassName)){
                 bIsClickMe = false;
             }
-            if(/simple-checkbox-text/.test(sClassName)){
+            if(/simple-checkbox-tip/.test(sClassName)){
                 bIsClickMe = false;
             }
             if(/simple-checkbox-label/.test(sClassName)){
@@ -115,24 +137,52 @@
     }
 
     function fRender() {
-        this.label = oDoc.createElement('label');
-        this.label.className = 'simple-checkbox-label';
-
-        this.input = oDoc.createElement('input');
-        this.input.type = 'checkbox';
-        this.input.className = 'simple-checkbox-input';
-        this.label.appendChild(this.input);
-
-        if(this.tip){
-            this.text = oDoc.createElement('span');
-            this.text.className = 'simple-checkbox-text';
-            this.text.innerHTML = this.tip;
-            this.label.appendChild(this.text);
-        }
-
+        this.renderDOM();
         this.rawClass = this.target.className;
         this.rootClass = (this.rawClass == ''? '' : ' ') + 'simple-checkbox';
-        this.target.appendChild(this.label);
+    }
+
+    function fRenderDOM() {
+        if(this.bind){
+            this.label = Helper.getDOM(this.target, 'label.simple-checkbox-label');
+            this.input = Helper.getDOM(this.target, 'input.simple-checkbox-input');
+            this.checked = this.input.checked;
+            this.text = Helper.getDOM(this.target, 'span.simple-checkbox-tip');
+            this.tip = this.text ? this.text.innerHTML : '';
+        }else{
+            this.label = oDoc.createElement('label');
+            this.label.className = 'simple-checkbox-label';
+            
+            this.input = oDoc.createElement('input');
+            this.input.type = 'checkbox';
+            this.input.className = 'simple-checkbox-input';
+            if(this.name){
+                this.input.name = this.name;
+            }
+            this.label.appendChild(this.input);
+            
+            if(this.tip){
+                this.text = oDoc.createElement('span');
+                this.text.className = 'simple-checkbox-tip';
+                this.text.innerHTML = this.tip;
+                this.label.appendChild(this.text);
+            }
+            
+            this.target.appendChild(this.label);
+        }
+    }
+
+    function fGetValue() {
+        return this.checked;
+    }
+
+    function fSetValue(bChecked) {
+        this.checked = !!bChecked;
+        if(this.checked){
+            this.check();
+        }else{
+            this.uncheck();
+        }
     }
 
     function fCheck() {

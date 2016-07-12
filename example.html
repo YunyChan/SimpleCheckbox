@@ -13,13 +13,25 @@
     </style>
 </head>
 <body>
-<div id="checkbox"></div>
+<div id="checkboxCreate"></div>
+<div id="checkboxBind">
+    <label class="simple-checkbox-label">
+        <input class="simple-checkbox-input" type="checkbox" name="checkboxBind">
+        <span class="simple-checkbox-tip">Hello, world!</span>
+    </label>
+</div>
 <script src="src/SimpleCheckbox.js"></script>
 <script>
-    var oCheckbox = new SimpleCheckbox({
-        target: document.getElementById('checkbox'),
+    var oCheckboxCreate = new SimpleCheckbox({
+        target: document.getElementById('checkboxCreate'),
+        name: 'checkboxCreate',
         checked: true,
         tip: 'Hello, world!'
+    });
+
+    var oCheckboxBind = new SimpleCheckbox({
+        target: document.getElementById('checkboxBind'),
+        bind: true
     });
 </script>
 </body>
