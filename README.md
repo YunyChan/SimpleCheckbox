@@ -33,17 +33,20 @@
 
 + `target` - __必须__, 需要插入组件的dom元素
 + `bind` - _可选[Boolean]:false_, 是否从已有DOM渲染组件
++ `id` - _可选[Number]_, 组件id值
 + `name` - _可选[String]_, 复选框表单name值
 + `checked` - _可选[Boolean]:false_, 设置复选框在初始化时默认是否选中
++ `silent` - _可选[Boolean]:false_, 是否静默创建组件，非静默创建的时候，如果存在onChange回调函数，则会在创建时调用
 + `tip` - _可选[String]_, 复选框提示信息
-+ `onChange` - _可选[Function]:null_, 复选框选中变化后的回调方法
++ `onChange` - _可选[Function]:null_, 复选框选中变化后的回调函数，如果为静默改变，则不会调用此方法
 
 APIs
 
-* `check()` - 选中
-* `uncheck()` - 取消选中
+* `toggle(Boolean silent)` - 复选框选中状态反转，
+* `check(Boolean silent)` - 选中
+* `uncheck(Boolean silent)` - 取消选中
 * `getValue()` - 获取复选框选中状态
-* `setValue(Boolean)` - 设置复选框选中状态
+* `setValue(Boolean checked, Boolean silent)` - 设置复选框选中状态
 
 ## 作者 ##
 

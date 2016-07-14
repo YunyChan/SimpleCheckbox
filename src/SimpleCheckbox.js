@@ -77,9 +77,9 @@
     SimpleCheckbox.prototype.renderDOM = fRenderDOM;
     SimpleCheckbox.prototype.getValue = fGetValue;
     SimpleCheckbox.prototype.setValue = fSetValue;
+    SimpleCheckbox.prototype.toggle = fToggle;
     SimpleCheckbox.prototype.check = fCheck;
     SimpleCheckbox.prototype.uncheck = fUncheck;
-    SimpleCheckbox.prototype.toggle = fToggle;
     SimpleCheckbox.prototype.onCheck = fOnCheck;
     SimpleCheckbox.prototype.onUncheck = fOnUncheck;
 
@@ -87,9 +87,11 @@
         this.config =  oConf = oConf || {};
         this.target = oConf.target;
         this.bind = !!oConf.bind;
-        this.checked = !!oConf.checked;
+        this.id = oConf.id || '';
         this.name = oConf.name || '';
+        this.checked = !!oConf.checked;
         this.tip = oConf.tip || '';
+        this.silent = !!oConf.silent;
         this.onChange = oConf.onChange || null;
         this.isIE6 = /MSIE 6\.0/.test(window.navigator.userAgent);
         this.isIE = /MSIE/.test(window.navigator.userAgent);
@@ -101,13 +103,13 @@
         var that = this;
         this.render();
         this.initEvents();
-        
+
         if(this.isIE){
             setTimeout(function(){
-                that.setValue(that.checked);
+                that.setValue(that.checked, that.silent);
             }, 200)
         }else{
-            this.setValue(this.checked);
+            this.setValue(this.checked, this.silent);
         }
     }
 
@@ -200,7 +202,8 @@
         return this.checked;
     }
 
-    function fSetValue(bChecked) {
+    function fSetValue(bChecked, bSilent) {
+        this.silent = bSilent;
         this.checked = !!bChecked;
         if(this.checked){
             this.check();
@@ -209,12 +212,23 @@
         }
     }
 
-    function fCheck() {
+    function fToggle(bSilent){
+        this.silent = bSilent;
+        if(!this.checked){
+            this.check();
+        }else{
+            this.uncheck();
+        }
+    }
+
+    function fCheck(bSilent) {
+        this.silent = bSilent;
         this.input.checked = true;
         this.onCheck();
     }
 
-    function fUncheck(){
+    function fUncheck(bSilent){
+        this.silent = bSilent;
         this.input.checked = false;
         this.onUncheck();
     }
@@ -222,20 +236,20 @@
     function fOnCheck(){
         this.checked = true;
         this.target.className = this.rootClass + ' simple-checkbox-checked';
-        this.onChange && this.onChange(this.checked);
+        if(this.silent){
+            this.silent = false;
+        }else{
+            this.onChange && this.onChange(this.checked);
+        }
     }
     
     function fOnUncheck() {
         this.checked = false;
         this.target.className = this.rootClass;
-        this.onChange && this.onChange(this.checked);
-    }
-
-    function fToggle(){
-        if(!this.checked){
-            this.check();
+        if(this.silent){
+            this.silent = false;
         }else{
-            this.uncheck();
+            this.onChange && this.onChange(this.checked);
         }
     }
 
