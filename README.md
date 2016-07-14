@@ -36,6 +36,7 @@
 + `name` - _可选[String]_, 复选框表单name值
 + `checked` - _可选[Boolean]:false_, 设置复选框在初始化时默认是否选中
 + `tip` - _可选[String]_, 复选框提示信息
++ `onChange` - _可选[Function]:null_, 复选框选中变化后的回调方法
 
 APIs
 

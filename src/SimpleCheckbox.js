@@ -90,6 +90,7 @@
         this.checked = !!oConf.checked;
         this.name = oConf.name || '';
         this.tip = oConf.tip || '';
+        this.onChange = oConf.onChange || null;
         this.isIE6 = /MSIE 6\.0/.test(window.navigator.userAgent);
         this.isIE = /MSIE/.test(window.navigator.userAgent);
         this.init();
@@ -221,11 +222,13 @@
     function fOnCheck(){
         this.checked = true;
         this.target.className = this.rootClass + ' simple-checkbox-checked';
+        this.onChange && this.onChange(this.checked);
     }
     
     function fOnUncheck() {
         this.checked = false;
         this.target.className = this.rootClass;
+        this.onChange && this.onChange(this.checked);
     }
 
     function fToggle(){
